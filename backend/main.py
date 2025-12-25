@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException , Depends
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from datetime import datetime
 from database import users_collection
 from schemas import UserRegister, UserLogin, TokenResponse, UserResponse
@@ -8,7 +8,8 @@ from models import user_model
 
 app = FastAPI(title="BunkTracker API")
 
-oauth2_scheme = OAuth2PasswordBearer
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
+
 
 def get_current_user(token: str = Depends(oauth2_scheme)):
     payload = decode_token(token)
@@ -41,15 +42,18 @@ def register(user : UserRegister):
     return { "message" : "User Registered Successfully"}    
 
 
-@app.post("login")
-def login(user : UserLogin):
-    db_user = users_collection.find_one({"email" : user.email})
-    if db_user or not verify_password(user.pasword , db_user["password"]):  
-        raise HTTPException(status_code=401 , detail="Invalid credentials")
-    
-    token = create_access_token({"sub" : db_user["email"]})
- 
-    return {"access_token" : token}
+@app.post("/login")
+def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    db_user = users_collection.find_one({"email": form_data.username})
+
+    if not db_user or not verify_password(form_data.password, db_user["password"]):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    token = create_access_token({"sub": db_user["email"]})
+    return {
+        "access_token": token,
+        "token_type": "bearer"
+    }
 
 @app.get("/me", response_model=UserResponse)
 def get_profile(current_user: dict = Depends(get_current_user)):
