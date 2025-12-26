@@ -1,10 +1,15 @@
+# Virtual environment
 venv/
-_pycache_/
+
+# Environment variables
 .env
 
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
 
-cd backend
-python -m venv venv
-venv\Scripts\activate
+__pycache__/
 
-ctrl+shift+p: BunkTracker\backend\venv\Scripts\python.exe
+
+
