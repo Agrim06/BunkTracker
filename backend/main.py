@@ -2,28 +2,16 @@ from fastapi import FastAPI, HTTPException , Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from datetime import datetime
 from database import users_collection
-from schemas import UserRegister, UserLogin, TokenResponse, UserResponse
+from schemas.user import UserRegister, UserLogin, TokenResponse, UserResponse
 from auth import hash_password, verify_password, create_access_token, decode_token
 from models import user_model
+from routes.attendance import router as attendance_router
+from routes.subjects import router as subjects_router
+from deps import get_current_user
 
 app = FastAPI(title="BunkTracker API")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
-
-
-def get_current_user(token: str = Depends(oauth2_scheme)):
-    payload = decode_token(token)
-
-    if not payload:
-         raise HTTPException(status_code=401 , detail="Token invalid or expired")
-
-    user = users_collection.find_one({"email" : payload["sub"]})
-
-    if not user:
-        raise HTTPException(status_code=404 , detail="User not found")
-
-    return user_model(user)
-
 
 @app.post("/register")
 def register(user : UserRegister):
@@ -58,3 +46,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
 @app.get("/me", response_model=UserResponse)
 def get_profile(current_user: dict = Depends(get_current_user)):
     return current_user
+
+
+app.include_router(subjects_router)
+app.include_router(attendance_router)

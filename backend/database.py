@@ -1,8 +1,9 @@
 from pymongo import MongoClient
-
-MONGO_URL = "mongodb://localhost:27017"
+from config import MONGO_URL
 
 client = MongoClient(MONGO_URL)
 db = client["BunkTracker"]
 
 users_collection = db["users"]
+subjects_collection = db["subjects"]
+attendance_collection = db["attendance"]

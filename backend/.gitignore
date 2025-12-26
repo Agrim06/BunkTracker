@@ -1,2 +1,10 @@
 venv/
 _pycache_/
+.env
+
+
+cd backend
+python -m venv venv
+venv\Scripts\activate
+
+ctrl+shift+p: BunkTracker\backend\venv\Scripts\python.exe

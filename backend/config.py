@@ -1,3 +1,9 @@
-SECRET_KEY = "c9f3a8d2b6e74f9a91b2c4e87d5f3a1e6b8c2f4d9a7e1c5b3f8d6a4e2c9b7"
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 60))
+MONGO_URL = os.getenv("MONGO_URL")
