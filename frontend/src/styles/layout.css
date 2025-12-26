@@ -1,0 +1,35 @@
+/* ===== Layout Styles ===== */
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.navbar-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.navbar-logout {
+  padding: 6px 12px;
+  border: 1px solid #e5e7eb;
+  background-color: white;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.navbar-logout:hover {
+  background-color: #f3f4f6;
+}
+
+/* Page Wrapper */
+.page-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
