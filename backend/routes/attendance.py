@@ -5,7 +5,7 @@ from bson import ObjectId
 from database import attendance_collection, subjects_collection
 from schemas.attendance import AttendanceUpdate
 from deps import get_current_user
-from services.attendance_service import calculate_attendance_percentage
+from services.attendance_service import (calculate_safe_bunk , calculate_attendance_percentage)
 
 router = APIRouter(prefix="/attendance" , tags=["Attendance"])
 
@@ -56,13 +56,15 @@ def attendance_summary( current_user: dict = Depends(get_current_user)):
     
         total = attended + missed
         percentage = calculate_attendance_percentage(attended , total)
+        safe_bunk = calculate_safe_bunk(attended , total)
 
         summary.append({
             "subject_id": str(s["_id"]),
             "subject_name": s["name"],
             "attended_count": attended,
             "missed_count": missed,
-            "attendance_percentage": round(percentage)
+            "attendance_percentage": round(percentage) ,
+            "safe_bunk" : safe_bunk 
         })
 
     return summary

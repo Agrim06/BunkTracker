@@ -9,3 +9,4 @@ class AttendanceSummary(BaseModel):
     attended_count: int
     missed_count: int
     attendance_percentage: float
+    safe_bunk : int 

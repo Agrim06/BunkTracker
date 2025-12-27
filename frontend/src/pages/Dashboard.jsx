@@ -1,3 +1,4 @@
+import React from "react";
 import {useState, useEffect} from "react";
 import { getAttendanceSummary } from "../api/attendance.api";
 import AttendanceCard from "../components/attendance/AttendanceCard"
@@ -7,21 +8,29 @@ const Dashboard = () =>{
     const [loading , setLoading] = useState(true);
     const [error , setError] = useState("");
 
-    useEffect(() =>{
+    useEffect(() => {
         getAttendanceSummary()
             .then((data) => {
+            console.log("Attendance summary response:", data);
+
+            if (Array.isArray(data)) {
                 setSummary(data);
-                setLoading(false)
-            })
-            .catch(() =>{
-                setError("Failed to load attendance summary")
-                setLoading(false)
-            });
-         }, [])
+            } else if (Array.isArray(data?.data)) {
+                
+                setSummary(data.data);
+            } else {
+                
+                setSummary([]);
+            }
 
-    if (loading) return <p> Loading... </p>
-    if (error) return <p> Error... </p>
-
+            setLoading(false);
+    })
+    .catch((err) => {
+      console.error(err);
+      setError("Failed to load attendance summary");
+      setLoading(false);
+    });
+}, []);
     return (
         <div className="dashboard">
             <h1 className="dashboard-title">Attendance Overview</h1>
